@@ -6,9 +6,7 @@ export default function Home() {
     <main>
       <div className="flex justify-between items-center py-3 px-8 lg:px-10 xl:px-16">
         <Link href={"/"}>
-          <div className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-black via-gray-300 to-black">
-            WOW
-          </div>
+          <div className="font-bold text-2xl text-black">WOW</div>
         </Link>
         <div className="flex items-center gap-4 text-sm font-medium">
           <Link

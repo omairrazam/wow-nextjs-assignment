@@ -2,17 +2,18 @@ export interface CheckboxProps {
   disabled?: boolean;
   defaultChecked?: boolean;
   id: string;
+  label: string;
 }
 
 const Checkbox = (props: CheckboxProps) => (
-  <div className="relative flex items-center">
+  <div className="w-full relative flex items-center gap-3">
     <input
       className="
-              peer relative appearance-none shrink-0 w-5 h-5 border border-zinc-400 rounded-[5px] mt-1 bg-white
-              focus:outline-none focus:ring-offset-0 focus:ring-1 focus:ring-zinc-200
-              checked:bg-white checked:border-zinc-400
-              disabled:border-steel-400 disabled:bg-steel-400
-            "
+            peer relative appearance-none shrink-0 w-5 h-5 border border-zinc-400 rounded-[5px] mt-1 bg-white
+            focus:outline-none focus:ring-offset-0 focus:ring-1 focus:ring-zinc-200
+            checked:bg-white checked:border-zinc-400
+            disabled:border-steel-400 disabled:bg-steel-400
+          "
       type="checkbox"
       {...props}
     />
@@ -28,6 +29,12 @@ const Checkbox = (props: CheckboxProps) => (
     >
       <polyline points="20 6 9 17 4 12"></polyline>
     </svg>
+    <label
+      htmlFor={props.id}
+      className="text-[13px] lg:text-sm text-zinc-500/90"
+    >
+      {props.label}
+    </label>
   </div>
 );
 

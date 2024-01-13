@@ -10,7 +10,7 @@ const Input = ({ type, placeholder }: InputProps) => {
     <input
       type={type}
       placeholder={placeholder}
-      className="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 placeholder:text-gray-700 bg-gray-100 rounded-lg"
+      className="flex items-center w-full px-5 py-4 mr-2 text-[13px] lg:text-sm font-medium outline-none focus:bg-zinc-100 placeholder:text-zinc-500 bg-zinc-50 rounded-lg"
     />
   );
 };
