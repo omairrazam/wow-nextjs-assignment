@@ -14,16 +14,17 @@ const AuthWrapper = ({ children }: {children: ReactNode}) => {
 
   const isSignInOrRegisterRoute = window.location.href.includes("signin") || window.location.href.includes("register");
 
-  if (!isAuthenticated() && !isSignInOrRegisterRoute) {
-    router.push('/signin');
-    return <Page />
-  }
 
   useEffect(()=> {
     if(isAuthenticated() && !user) {
       fetchAccount();
     }
   }, [])
+
+  if (!isAuthenticated() && !isSignInOrRegisterRoute) {
+    router.push('/signin');
+    return <Page />
+  }
 
   return <>{children}</>;
 };

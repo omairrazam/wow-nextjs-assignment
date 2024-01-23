@@ -12,3 +12,13 @@ export const fetchProducts = async () => {
     throw error;
   }
 };
+
+export const createProduct = async (product: any) => {
+  try {
+    const response = await axios.post<any>(`${BASE_URL}/products`, {...product});
+    return response.data;
+  } catch (error) {
+    console.error('Error creating product:', error);
+    throw error;
+  }
+};

@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import Checkbox from "@/app/components/checkbox";
 import Image from "next/image";
@@ -8,6 +10,7 @@ interface Product {
   description: string;
   price: number;
   image: any;
+  sku: string;
 }
 
 interface ProductsTableProps {
@@ -27,6 +30,7 @@ const ProductsTable = ({ productsData }: ProductsTableProps) => {
             <td className="w-96 p-5">Description</td>
             <td className="p-5">Name</td>
             <td className="p-5">Price</td>
+            <td className="p-5">SKU</td>
             <td className="text-right p-5">Action</td>
           </tr>
         </thead>
@@ -40,7 +44,7 @@ const ProductsTable = ({ productsData }: ProductsTableProps) => {
                 <div className="bg-zinc-50 rounded-2xl aspect-square w-20">
                   <Image
                     src={product.image}
-                    alt="productImage_id"
+                    alt="productImage"
                     className="aspect-square rounded-2xl"
                   />
                 </div>
@@ -52,7 +56,10 @@ const ProductsTable = ({ productsData }: ProductsTableProps) => {
                 {product.name}
               </td>
               <td className="p-5 align-top font-bold text-black text-base">
-                ${product.price}
+                {product.price ? `${product.price}`: "-"}
+              </td>
+              <td className="p-5 align-top text-black font-medium text-sm">
+                {product.sku}
               </td>
               <td className="p-5 align-top text-right">
                 <div className="flex items-center justify-end gap-3 font-medium">

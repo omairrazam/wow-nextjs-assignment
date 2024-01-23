@@ -1,4 +1,3 @@
-import ProductsListing from "./components/product/ProductsListing";
 import Header from "./components/common/header";
 
 export default function Home() {
@@ -6,7 +5,6 @@ export default function Home() {
     <>
       <Header />
       <main>
-        <ProductsListing />
       </main>
     </>
   );

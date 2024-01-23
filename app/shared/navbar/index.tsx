@@ -1,7 +1,22 @@
+"use client"
+
 import React from "react";
 import Link from "next/link";
+import { useAuthContext } from "@/app/services/hooks/auth/useAuthContext";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/services/hooks/auth/useAuth";
 
 const Navbar = () => {
+
+  const { isAuthenticated } = useAuthContext();
+  const { doLogout } = useAuth();
+  const router = useRouter();
+  
+  const handleLogout = () => {
+    doLogout();
+    router.push("/signin")
+  }
+
   return (
     <div className="sticky top-0 bg-white border-b border-zinc-100 z-50 flex justify-between items-center py-3 px-8 lg:px-10 xl:px-16">
       <Link href={"/products/listing"}>
@@ -14,6 +29,7 @@ const Navbar = () => {
         <Link href={"/products/add-product"} className="text-zinc-500 text-sm">
           Add Product
         </Link>
+        {isAuthenticated() && <button className="text-zinc-500 text-sm" onClick={handleLogout} >Logout</button>}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

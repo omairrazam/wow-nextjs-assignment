@@ -1,27 +1,41 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { apis } from '../../api';
 
-export const useProducts = () => {
+export function useProducts() {
+  const [error, setError] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [productState, setProductState] = useState({
+    error: null,
+    loading: false,
+    products: []
+  });
 
-  useEffect(() => {
-    const fetchProductsData = async () => {
-      try {
-        const productsData = await apis.product.fetchProducts();
-        setProducts(productsData);
-        setLoading(false);
-      } catch (error:any) {
-        setError(error);
-        setLoading(false);
-      }
-    };
+  const getProducts: any = async () => {
+    let result: any;
+    setProductState({...productState, loading: true})
+    try{
+      result = await apis.product.fetchProducts();
+      setProductState({...productState, error: null, loading: false, products: result})
+    }catch(error: any) {
+      setProductState({...productState, error: error, loading: false, products: []})
+    }
+  }
 
-    fetchProductsData();
-  }, []);
+  async function createProduct(product: any) {
+    setProductState({...productState, loading: true})
+    let response: any;
+    try {
+      response = await apis.product.createProduct(product);
+      setProductState({...productState, error: null, loading: false})
+      return true;
+    } catch(error: any) {
+      setProductState({...productState, error: error, loading: false})
+      return false;
+    }
+  }
 
-  return { products, loading, error };
-};
+  return { getProducts, createProduct, products: productState.products, error: productState.loading, loading: productState.loading }
+}
