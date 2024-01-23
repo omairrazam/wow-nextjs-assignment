@@ -4,6 +4,7 @@ import React from 'react';
 import { useProducts } from '../../services/hooks/product/useProducts';
 
 const ProductsListing: React.FC = () => {
+  
   const { products, loading, error } = useProducts();
 
   if (loading) {

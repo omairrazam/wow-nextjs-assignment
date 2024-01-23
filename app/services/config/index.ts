@@ -1,3 +1,3 @@
 "use client"
 
-export const BASE_URL = 'https://hub.dummyapis.com';
+export const BASE_URL = 'http://localhost:3000';
