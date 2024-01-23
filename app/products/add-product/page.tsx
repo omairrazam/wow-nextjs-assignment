@@ -2,8 +2,36 @@ import Button from "@/app/components/button";
 import ImagePlaceholder from "@/app/components/image-placeholder";
 import Input from "@/app/components/input";
 import React from "react";
+import { useFormik } from "formik";
+import * as yup from "yup";
+
+interface CreateProductValues {
+  productName: string;
+  productDescription: string;
+  productPrice: string;
+}
+
+const validationSchema = yup.object({
+  productName: yup.string().required("Product name is required"),
+  productDescription: yup.string().required("Product description is required"),
+  productPrice: yup.string().required("Product $Price is required"),
+});
 
 const Page = () => {
+  const onSubmitHandler = (values: CreateProductValues) => {
+    alert(
+      `Product Name: ${values.productName} , Product Description: ${values.productDescription}, Product Price: ${values.productPrice}`
+    );
+  };
+  const formik = useFormik({
+    initialValues: {
+      productName: "",
+      productDescription: "",
+      productPrice: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => onSubmitHandler(values),
+  });
   return (
     <div className="bg-zinc-50 min-h-screen w-full py-10 lg:py-16">
       <div className="max-w-7xl lg:mx-auto">
@@ -26,8 +54,18 @@ const Page = () => {
                   Product name
                 </label>
                 <Input
+                  name="productName"
                   type="text"
+                  value={formik.values.productName}
                   placeholder="Enter product name. etc Tea Cup"
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.productName &&
+                    Boolean(formik.errors.productName)
+                  }
+                  helperText={
+                    formik.touched.productName && formik.errors.productName
+                  }
                 />
               </div>
               <div className="flex flex-col items-start gap-1.5 mt-4">
@@ -35,15 +73,20 @@ const Page = () => {
                   Product description
                 </label>
                 <textarea
+                  name="productDescription"
                   placeholder="Enter product description. etc Newer Model"
+                  value={formik.values.productName}
+                  onChange={formik.handleChange}
                   className="flex items-center w-full px-5 py-4 mr-2 text-[13px] lg:text-sm font-medium outline-none focus:bg-zinc-100 placeholder:text-zinc-500 bg-zinc-50 rounded-lg"
-                  id=""
                   cols={30}
                   rows={10}
                 />
               </div>
             </div>
-            <button className="w-full mt-6 px-5 py-2.5 lg:py-3 rounded-lg bg-black text-white text-[13px] lg:text-sm hover:opacity-60">
+            <button
+              type="submit"
+              className="w-full mt-6 px-5 py-2.5 lg:py-3 rounded-lg bg-black text-white text-[13px] lg:text-sm hover:opacity-60"
+            >
               Save Info
             </button>
           </div>
@@ -76,8 +119,18 @@ const Page = () => {
                   Product price
                 </label>
                 <Input
+                  name="productPrice"
                   type="number"
-                  placeholder="Enter product price. etc $699"
+                  value={formik.values.productPrice}
+                  placeholder="Enter product name. etc Tea Cup"
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.productPrice &&
+                    Boolean(formik.errors.productPrice)
+                  }
+                  helperText={
+                    formik.touched.productPrice && formik.errors.productPrice
+                  }
                 />
               </div>
             </div>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ProductsListing from "./components/product/ProductsListing";
 
 export default function Home() {
   return (
@@ -22,6 +23,9 @@ export default function Home() {
             Register
           </Link>
         </div>
+      </div>
+      <div>
+        <ProductsListing />
       </div>
     </main>
   );

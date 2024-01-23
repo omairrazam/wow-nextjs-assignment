@@ -3,6 +3,12 @@ import React from "react";
 interface InputProps {
   placeholder: string;
   type: string;
+  id?: string;
+  value?: string;
+  error?: any;
+  helperText?: any;
+  name?: string;
+  onChange?: any;
 }
 
 const Input = ({ type, placeholder }: InputProps) => {
