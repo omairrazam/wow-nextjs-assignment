@@ -3,11 +3,11 @@
 import ProductListing from "@/app/components/products/productListing";
 import React from "react";
 
-const ProductsListingPage = () => {
+const ProductsListingPageAdmin = () => {
 
   return (
     <ProductListing/>
   );
 };
 
-export default ProductsListingPage;
+export default ProductsListingPageAdmin;

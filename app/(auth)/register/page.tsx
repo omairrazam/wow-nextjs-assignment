@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "@/app/services/hooks/auth/useAuth";
 import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/app/services/hooks/auth/useAuthContext";
 
 interface SignUpFormValues {
   username: string;
@@ -33,13 +34,15 @@ const Page = () => {
 
   const { register, error, loading } = useAuth();
   const router = useRouter();
+  const { isAdmin } = useAuthContext();
 
   async function onSubmitHandler (values: SignUpFormValues) {
 
     const isRegistered = await register(values.username, values.password);
 
     if (isRegistered) {
-      router.push("/products/listing")
+      const productsListingRoute = isAdmin() ? "/admin/products/listing" : "/products/listing"
+      router.push(productsListingRoute)
     } else {
       console.log(`error: ${error}`); // ToDo: Error handling
     }

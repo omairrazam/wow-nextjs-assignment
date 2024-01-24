@@ -8,6 +8,7 @@ type authContextType = {
     login: (token: string) => void;
     logout: () => void;
     isAuthenticated: () => boolean;
+    isAdmin: () => boolean;
 };
 
 const authContextDefaultValues: authContextType = {
@@ -15,7 +16,8 @@ const authContextDefaultValues: authContextType = {
     setUserProfile: (user: any) => null,
     login: (token: string) => {},
     logout: () => {},
-    isAuthenticated: () => false
+    isAuthenticated: () => false,
+    isAdmin: () => false
 };
 
 export const AuthContext = createContext<authContextType>(authContextDefaultValues);
@@ -43,12 +45,17 @@ export function AuthContextProvider({ children }: Props) {
         setUser(user);
     }
 
+    const isAdmin = () => {
+        return !!user?.roles?.includes("admin");
+    };
+
     const value = {
         user,
         login,
         logout,
         isAuthenticated,
-        setUserProfile
+        setUserProfile,
+        isAdmin
     };
     
     return (

@@ -5,6 +5,7 @@ import Checkbox from "@/app/components/checkbox";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/app/services/hooks/product/useProducts";
+import { useAuthContext } from "@/app/services/hooks/auth/useAuthContext";
 
 interface Product {
   id: number;
@@ -23,10 +24,11 @@ const ProductsTable = ({ productsData }: ProductsTableProps) => {
 
   const router = useRouter();
 
-  const { deleteProduct, products, error } = useProducts();
+  const { deleteProduct, error } = useProducts();
+  const { isAdmin } = useAuthContext();
 
   const handleEdit = (sku: string) => {
-    router.push(`/products/edit?sku=${sku}`);
+    router.push(`/admin/products/edit?sku=${sku}`);
   }
 
   const handleDelete = async (sku: string) => {
@@ -49,7 +51,7 @@ const ProductsTable = ({ productsData }: ProductsTableProps) => {
             <td className="p-5">Name</td>
             <td className="p-5">Price</td>
             <td className="p-5">SKU</td>
-            <td className="text-right p-5">Action</td>
+            {isAdmin() && <td className="text-right p-5">Action</td>}
           </tr>
         </thead>
         <tbody>
@@ -79,7 +81,7 @@ const ProductsTable = ({ productsData }: ProductsTableProps) => {
               <td className="p-5 align-top text-black font-medium text-sm">
                 {product.sku}
               </td>
-              <td className="p-5 align-top text-right">
+              {isAdmin() && <td className="p-5 align-top text-right">
                 <div className="flex items-center justify-end gap-3 font-medium">
                   <button onClick={()=> handleEdit(product.sku)} className="bg-zinc-100 inline-flex items-center gap-2 justify-center text-zinc-700 rounded-full px-5 py-2">
                     <svg
@@ -116,7 +118,7 @@ const ProductsTable = ({ productsData }: ProductsTableProps) => {
                     Delete
                   </button>
                 </div>
-              </td>
+              </td>}
             </tr>
           ))}
         </tbody>

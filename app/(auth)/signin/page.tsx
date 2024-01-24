@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import * as Yup from 'yup';
 import { useAuth } from "@/app/services/hooks/auth/useAuth";
 import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/app/services/hooks/auth/useAuthContext";
 
 interface LoginFormValues {
   username: string;
@@ -26,6 +27,8 @@ const validationSchema = Yup.object({
 const Page = () => {
 
   const { doLogin, error, loading } = useAuth();
+  const { isAdmin } = useAuthContext();
+
   const router = useRouter();
 
   async function onSubmitHandler (values: LoginFormValues) {
@@ -33,7 +36,8 @@ const Page = () => {
     const isLoggedIn = await doLogin(values.username, values.password);
 
     if (isLoggedIn) {
-      router.push("/products/listing")
+      const productsListingRoute = isAdmin() ? "/admin/products/listing" : "/products/listing"
+      router.push(productsListingRoute)
     } else {
       console.log(`error: ${error}`); // ToDo: Error handling
     }

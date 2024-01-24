@@ -1,14 +1,9 @@
 "use client"
 
-import Button from "@/app/components/button";
-import ImagePlaceholder from "@/app/components/image-placeholder";
-import Input from "@/app/components/input";
 import React, { useEffect } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import { useProducts } from "@/app/services/hooks/product/useProducts";
-import ProductForm from "./components/productForm";
 import { useProductsContext } from "@/app/services/hooks/product/useProductsContext";
+import ProductForm from "@/app/components/products/productForm";
 
 export interface Product {
   name: string;

@@ -23,12 +23,6 @@ const Navbar = () => {
         <div className="font-bold text-2xl text-black">WOW</div>
       </Link>
       <div className="flex items-center gap-4 lg:gap-8 text-sm font-medium">
-        <Link href={"/products/listing"} className="text-zinc-500 text-sm">
-          Products
-        </Link>
-        <Link href={"/products/add-product"} className="text-zinc-500 text-sm">
-          Add Product
-        </Link>
         {isAuthenticated() && <button className="text-zinc-500 text-sm" onClick={handleLogout} >Logout</button>}
         <svg
           xmlns="http://www.w3.org/2000/svg"

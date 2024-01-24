@@ -1,6 +1,5 @@
 "use client"
 
-import Button from "@/app/components/button";
 import ImagePlaceholder from "@/app/components/image-placeholder";
 import Input from "@/app/components/input";
 import React from "react";
@@ -9,7 +8,7 @@ import * as Yup from "yup";
 import { useProducts } from "@/app/services/hooks/product/useProducts";
 import { useRouter } from "next/navigation";
 
-interface CreateProductValues {
+export interface Product {
   name: string;
   description: string;
   sku: string;
@@ -23,17 +22,17 @@ const validationSchema = Yup.object({
   sku: Yup.string().required("Product sku is required"),
 });
 
-const Page = () => {
+const ProductForm = ({product}: {product: Product | null}) => {
 
-  const { createProduct, error, loading } = useProducts();
+  const { editProduct, error, loading } = useProducts();
   const router = useRouter();
 
-  async function onSubmitHandler (values: CreateProductValues) {
+  async function onSubmitHandler (values: Product) {
 
-    const isProductCreated = await createProduct(values);
+    const isProductEdited = await editProduct(values);
     
-    if (isProductCreated) {
-      router.push("/products/listing")
+    if (isProductEdited) {
+      router.push("/admin/products/listing")
     } else {
       console.log(`error: ${error}`); // ToDo: Error handling
     }
@@ -41,25 +40,17 @@ const Page = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      description: "",
-      price: "",
-      sku: ""
+      name: product?.name || "",
+      description: product?.description || "",
+      price: product?.price || "",
+      sku: product?.sku || ""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => onSubmitHandler(values),
   });
+
   return (
-    <div className="bg-zinc-50 min-h-screen w-full py-10 lg:py-16">
-      <div className="max-w-7xl lg:mx-auto">
-        <div className="mx-4 lg:mx-0 mb-4 lg:mb-6">
-          <h1 className="lg:text-xl font-semibold">Add Product</h1>
-          <p className="text-xs lg:hidden text-zinc-500">Add a product below</p>
-          <p className="text-sm hidden lg:block text-zinc-500">
-            Add a product by filling product info fields
-          </p>
-        </div>
-        <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+    <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <div className="lg:row-span-2 bg-white p-5 lg:p-7 border border-zinc-100 lg:rounded-xl">
             <h1 className="lg:text-lg font-semibold">Basic Information</h1>
             <p className="text-sm text-zinc-500">
@@ -93,6 +84,7 @@ const Page = () => {
                   placeholder="Enter product sku"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  readOnly={true}
                 />
                 {formik.touched.sku && formik.errors.sku ? (<div className="bg-red-50 text-red-500 px-5 py-2 rounded-md text-xs mt-2">{formik.errors.sku}</div>) : null}
               </div>
@@ -163,9 +155,7 @@ const Page = () => {
             </div>
           </div>
         </form>
-      </div>
-    </div>
   );
 };
 
-export default Page;
+export default ProductForm;
