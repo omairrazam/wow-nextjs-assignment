@@ -1,12 +1,13 @@
 import React from "react";
 import Image from "next/image";
 
-interface Product {
+export interface Product {
   id: number;
   name: string;
   description: string;
   price: number;
   image: any;
+  sku: string;
 }
 
 interface ProductsGridProps {
@@ -17,7 +18,7 @@ const ProductsGrid = ({ productsData }: ProductsGridProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       {productsData.map((product) => (
-        <div className="bg-white p-5 rounded-2xl flex flex-col gap-4">
+        <div key={product.sku} className="bg-white p-5 rounded-2xl flex flex-col gap-4">
           <div className="flex items-start gap-2 flex-1">
             <Image
               src={product.image}

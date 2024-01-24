@@ -35,3 +35,17 @@ export const getUserProfile = async (): Promise<UserProfileResponse> => {
     throw error;
   }
 };
+
+export const register = async (username: string, password: string): Promise<any> => {
+  try {
+    const response = await axios.post<any>(`${BASE_URL}/auth/register`, {
+      username,
+      password,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error signing in:', error);
+    throw error;
+  }
+};

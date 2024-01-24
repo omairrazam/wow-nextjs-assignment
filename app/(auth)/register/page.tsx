@@ -1,37 +1,55 @@
+"use client"
+
 import * as React from "react";
 import Link from "next/link";
 import Checkbox from "@/app/components/checkbox-label";
 import Button from "@/app/components/button";
 import Input from "@/app/components/input";
 import { useFormik } from "formik";
-import * as yup from "yup";
+import * as Yup from "yup";
+import { useAuth } from "@/app/services/hooks/auth/useAuth";
+import { useRouter } from "next/navigation";
 
 interface SignUpFormValues {
-  email: string;
-  firstName: string;
-  lastName: string;
+  username: string;
   password: string;
+  confirmPassword: string;
 }
 
-const validationSchema = yup.object({
-  email: yup.string().required("Email is required"),
-  firstName: yup.string().required("First Name is required"),
-  lastName: yup.string().required("Last Name is required"),
-  password: yup.string().required("Password is required"),
+const validationSchema = Yup.object({
+  username: Yup.string()
+    .min(4, 'Must be at least 4 characters')
+    .required('Required'),
+  password: Yup.string()
+    .min(8, 'Must be atleast 8 characters')
+    .required('Required'),
+  confirmPassword: Yup.string()
+    .min(8, 'Must be atleast 8 characters')
+    .required('Required')
+    .oneOf([Yup.ref('password'), ""], 'Passwords must match')
 });
 
 const Page = () => {
-  const onSubmitHandler = (values: SignUpFormValues) => {
-    alert(
-      `Email: ${values.email} , First Name: ${values.firstName}, Last Name: ${values.lastName}, Password: ${values.password}`
-    );
+
+  const { register, error, loading } = useAuth();
+  const router = useRouter();
+
+  async function onSubmitHandler (values: SignUpFormValues) {
+
+    const isRegistered = await register(values.username, values.password);
+
+    if (isRegistered) {
+      router.push("/products/listing")
+    } else {
+      console.log(`error: ${error}`); // ToDo: Error handling
+    }
   };
+  
   const formik = useFormik({
     initialValues: {
-      email: "",
-      firstName: "",
-      lastName: "",
+      username: "",
       password: "",
+      confirmPassword: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => onSubmitHandler(values),
@@ -47,7 +65,7 @@ const Page = () => {
         <div className="flex justify-center w-full h-full my-auto xl:gap-14 lg:justify-normal md:gap-5">
           <div className="flex items-center justify-center w-full lg:p-12">
             <div className="flex items-center xl:p-10 w-full max-w-lg mx-auto px-6 lg:px-0">
-              <form className="flex flex-col w-full h-full pb-6 text-center bg-white rounded-3xl">
+              <form onSubmit={formik.handleSubmit} className="flex flex-col w-full h-full pb-6 text-center bg-white rounded-3xl">
                 <h3 className="mb-3 text-2xl lg:text-3xl font-semibold text-dark-grey-900 mt-10 lg:mt-0">
                   Register
                 </h3>
@@ -56,66 +74,21 @@ const Page = () => {
                 </p>
                 <div className="flex flex-col items-start mb-5">
                   <label
-                    htmlFor="email"
+                    htmlFor="username"
                     className="mb-1.5 text-sm text-start text-grey-900"
                   >
-                    Email*
+                    Username*
                   </label>
                   <Input
-                    name="email"
-                    value={formik.values.email}
-                    type="email"
+                    id="username"
+                    name="username"
+                    value={formik.values.username}
+                    type="text"
                     onChange={formik.handleChange}
-                    placeholder="email@company.com"
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
+                    onBlur={formik.handleBlur}
+                    placeholder="john"
                   />
-                </div>
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="flex flex-col items-start">
-                    <label
-                      htmlFor="first_name"
-                      className="mb-1.5 text-sm text-gray-900"
-                    >
-                      First Name
-                    </label>
-                    <Input
-                      name="firstName"
-                      value={formik.values.firstName}
-                      type="text"
-                      placeholder="Enter First Name"
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.firstName &&
-                        Boolean(formik.errors.firstName)
-                      }
-                      helperText={
-                        formik.touched.firstName && formik.errors.firstName
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col items-start">
-                    <label
-                      htmlFor="last_name"
-                      className="mb-1.5 text-sm text-start text-gray-900"
-                    >
-                      Last Name
-                    </label>
-                    <Input
-                      name="lastName"
-                      value={formik.values.lastName}
-                      type="text"
-                      placeholder="Enter Last Name"
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.lastName &&
-                        Boolean(formik.errors.lastName)
-                      }
-                      helperText={
-                        formik.touched.lastName && formik.errors.lastName
-                      }
-                    />
-                  </div>
+                  {formik.touched.username && formik.errors.username ? (<div className="bg-red-50 text-red-500 px-5 py-2 rounded-md text-xs mt-2">{formik.errors.username}</div>) : null}
                 </div>
                 <div className="flex flex-col items-start mb-5">
                   <label
@@ -125,18 +98,33 @@ const Page = () => {
                     Password*
                   </label>
                   <Input
+                    id="password"
                     name="password"
                     value={formik.values.password}
                     type="password"
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     placeholder="Enter your password"
-                    error={
-                      formik.touched.password && Boolean(formik.errors.password)
-                    }
-                    helperText={
-                      formik.touched.password && formik.errors.password
-                    }
                   />
+                  {formik.touched.password && formik.errors.password ? (<div className="bg-red-50 text-red-500 px-5 py-2 rounded-md text-xs mt-2">{formik.errors.password}</div>) : null}
+                </div>
+                <div className="flex flex-col items-start mb-5">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="mb-1.5 text-sm text-start text-gaey-900"
+                  >
+                    Confirm Password*
+                  </label>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formik.values.confirmPassword}
+                    type="password"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    placeholder="Re-Enter your password"
+                  />
+                  {formik.touched.confirmPassword && formik.errors.confirmPassword ? (<div className="bg-red-50 text-red-500 px-5 py-2 rounded-md text-xs mt-2">{formik.errors.confirmPassword}</div>) : null}
                 </div>
                 <div className="mb-8">
                   <Checkbox

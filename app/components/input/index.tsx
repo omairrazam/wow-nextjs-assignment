@@ -12,9 +12,10 @@ interface InputProps {
   name?: string;
   onChange?: any;
   onBlur?: any;
+  readOnly?: boolean;
 }
 
-const Input = ({ type, placeholder, onChange, id, value, name, onBlur }: InputProps) => {
+const Input = ({ type, placeholder, onChange, id, value, name, onBlur, readOnly }: InputProps) => {
   return (
     <input
       type={type}
@@ -25,6 +26,7 @@ const Input = ({ type, placeholder, onChange, id, value, name, onBlur }: InputPr
       value={value}
       name={name}
       onBlur={onBlur}
+      readOnly={readOnly}
     />
   );
 };

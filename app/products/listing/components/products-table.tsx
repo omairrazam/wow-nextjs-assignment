@@ -3,6 +3,8 @@
 import React from "react";
 import Checkbox from "@/app/components/checkbox";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useProducts } from "@/app/services/hooks/product/useProducts";
 
 interface Product {
   id: number;
@@ -18,6 +20,22 @@ interface ProductsTableProps {
 }
 
 const ProductsTable = ({ productsData }: ProductsTableProps) => {
+
+  const router = useRouter();
+
+  const { deleteProduct, products, error } = useProducts();
+
+  const handleEdit = (sku: string) => {
+    router.push(`/products/edit?sku=${sku}`);
+  }
+
+  const handleDelete = async (sku: string) => {
+    const isProductDeleted = await deleteProduct(sku);
+    if (!isProductDeleted) {
+      console.log(error); // ToDo: Error handling
+    }
+  }
+
   return (
     <div>
       <table className="w-full overflow-x-auto table">
@@ -36,7 +54,7 @@ const ProductsTable = ({ productsData }: ProductsTableProps) => {
         </thead>
         <tbody>
           {productsData.map((product) => (
-            <tr className="text-xs text-zinc-500/70 border-b border-zinc-100">
+            <tr key={product.sku} className="text-xs text-zinc-500/70 border-b border-zinc-100">
               <td className="p-5">
                 <Checkbox id="selected_product_id" />
               </td>
@@ -63,7 +81,7 @@ const ProductsTable = ({ productsData }: ProductsTableProps) => {
               </td>
               <td className="p-5 align-top text-right">
                 <div className="flex items-center justify-end gap-3 font-medium">
-                  <button className="bg-zinc-100 inline-flex items-center gap-2 justify-center text-zinc-700 rounded-full px-5 py-2">
+                  <button onClick={()=> handleEdit(product.sku)} className="bg-zinc-100 inline-flex items-center gap-2 justify-center text-zinc-700 rounded-full px-5 py-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -80,7 +98,7 @@ const ProductsTable = ({ productsData }: ProductsTableProps) => {
                     </svg>
                     Edit
                   </button>
-                  <button className="bg-red-500 inline-flex gap-2 justify-center items-center text-white rounded-full px-5 py-2">
+                  <button onClick={()=> handleDelete(product.sku)} className="bg-red-500 inline-flex gap-2 justify-center items-center text-white rounded-full px-5 py-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Product1Image from "@/app/assets/images/products/1.png";
 import Product2Image from "@/app/assets/images/products/2.png";
@@ -10,13 +10,17 @@ import Product5Image from "@/app/assets/images/products/5.png";
 import Product6Image from "@/app/assets/images/products/6.png";
 import Product7Image from "@/app/assets/images/products/7.png";
 import ProductsTable from "./components/products-table";
-import ProductsGrid from "./components/products-grid";
+import ProductsGrid, { Product } from "./components/products-grid";
 import { Pagination } from "@/app/components/pagination";
 import { useProducts } from "@/app/services/hooks/product/useProducts";
+import { useProductsContext } from "@/app/services/hooks/product/useProductsContext";
 
 const Page = () => {
 
-  const { getProducts, products, loading, error } = useProducts();
+  const { getProducts, loading, error } = useProducts();
+  const { products } = useProductsContext();
+
+  const [productListing, setProductListing] = useState<Product[]>(products);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,6 +29,10 @@ const Page = () => {
   
     fetchProducts();
   }, []);
+
+  useEffect(()=> {
+    setProductListing(products);
+  }, [products])
 
   if (loading) {
     return <div>Loading...</div>;
@@ -68,15 +76,15 @@ const Page = () => {
           </Link>
         </div>
         <div className="bg-white lg:rounded-xl hidden lg:block border border-zinc-100">
-          {products && products.length > 0 ? <>
-            <ProductsTable productsData={products} />
+          {productListing && productListing.length > 0 ? <>
+            <ProductsTable productsData={productListing} />
             <div className="flex justify-center items-center my-8">
               <Pagination noOfPages={[1, 2, 3, 4, 5]} />
             </div>
           </> : <div>No Products found</div>}
         </div>
         <div className="lg:hidden">
-          <ProductsGrid productsData={products} />
+          <ProductsGrid productsData={productListing} />
         </div>
       </div>
     </div>

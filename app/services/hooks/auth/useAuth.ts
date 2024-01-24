@@ -54,5 +54,26 @@ export function useAuth() {
     logout();
   }
 
-  return { doLogin, doLogout, fetchAccount, error, loading }
+  async function register(username: string, password: string) {
+    setLoading(true)
+    let response: any;
+    try {
+      response = await apis.auth.register(username, password);
+    } catch(error) {
+      setError(error);
+      setLoading(false);
+      return false;
+    }
+
+    const user = response;
+
+    if (user) {
+      return await doLogin(user.username, user.password);
+    } else {
+      setLoading(false);
+      return false
+    }
+  }
+
+  return { doLogin, doLogout, fetchAccount, register, error, loading }
 }
